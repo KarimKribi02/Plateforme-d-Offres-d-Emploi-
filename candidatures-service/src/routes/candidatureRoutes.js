@@ -10,7 +10,7 @@ const {
 // Middleware d'authentification (exemple)
 const auth = require('../middlewares/auth');
 
-router.post('/', auth('candidat'), createCandidature);
+router.post('/', createCandidature);
 router.get('/me', auth('candidat'), getMesCandidatures);
 router.get('/offre/:offreId', auth('recruteur'), getCandidaturesOffre);
 router.put('/:id/statut', auth('recruteur'), updateStatutCandidature);
