@@ -2,75 +2,85 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterCandidat = () => {
-  const navigate = useNavigate(); // Hook de redirection
+  const navigate = useNavigate();
 
-  // État du formulaire
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
-    cv: null,
-    specialty: '',
+    password: '',
   });
 
-  const [loading, setLoading] = useState(false); // État de chargement
-  const [errors, setErrors] = useState({}); // Erreurs de validation
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
 
-  // Gestion des changements dans le formulaire
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setFormData({
-        ...formData,
-        [name]: files[0],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  // Validation du formulaire
   const validateForm = () => {
     const newErrors = {};
-    const phonePattern = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.name) newErrors.name = "Le nom complet est requis.";
     if (!formData.email || !emailPattern.test(formData.email)) newErrors.email = "Veuillez entrer un email valide.";
-    if (!formData.phone || !phonePattern.test(formData.phone)) newErrors.phone = "Veuillez entrer un numéro de téléphone valide.";
-    if (!formData.specialty) newErrors.specialty = "La spécialité est requise.";
+    if (!formData.password || formData.password.length < 6) newErrors.password = "Le mot de passe doit contenir au moins 6 caractères.";
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Retourne true si aucune erreur
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return; // Ne soumettre pas si le formulaire est invalide
+    if (!validateForm()) return;
 
-    setLoading(true); // Afficher le chargement
+    setLoading(true);
+    setApiError('');
 
-    // Simuler un envoi de données (API)
-    setTimeout(() => {
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: 'candidat',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Une erreur est survenue');
+      }
+
+      navigate('/recherche-offres');
+    } catch (error) {
+      setApiError(error.message);
+    } finally {
       setLoading(false);
-      navigate('/recherche-offres'); // Rediriger après l'envoi
-    }, 2000);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-3xl">
       <h2 className="text-4xl font-semibold mb-6 text-center text-violet-700">Inscription - Candidat</h2>
-      <p className="text-lg text-gray-600 mb-12 text-center">
-        Rejoignez notre plateforme et postulez à des offres de stage adaptées à votre profil.
+      <p className="text-lg text-gray-600 mb-8 text-center">
+        Créez un compte pour accéder aux offres de stage.
       </p>
 
+      {apiError && <p className="text-red-600 text-center mb-4">{apiError}</p>}
+
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Champ pour le nom complet */}
-        <div className="mb-6">
+        {/* Nom complet */}
+        <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-800">Nom complet</label>
           <input
             type="text"
@@ -85,8 +95,8 @@ const RegisterCandidat = () => {
           {errors.name && <p className="text-red-600 text-sm mt-2">{errors.name}</p>}
         </div>
 
-        {/* Champ pour l'email */}
-        <div className="mb-6">
+        {/* Email */}
+        <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-800">Email</label>
           <input
             type="email"
@@ -101,36 +111,20 @@ const RegisterCandidat = () => {
           {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email}</p>}
         </div>
 
-        {/* Champ pour le numéro de téléphone */}
-        <div className="mb-6">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-800">Numéro de téléphone</label>
+        {/* Mot de passe */}
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-800">Mot de passe</label>
           <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
             onChange={handleChange}
             className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre numéro de téléphone"
+            placeholder="Mot de passe sécurisé"
             required
           />
-          {errors.phone && <p className="text-red-600 text-sm mt-2">{errors.phone}</p>}
-        </div>
-
-        {/* Champ pour la spécialité */}
-        <div className="mb-6">
-          <label htmlFor="specialty" className="block text-sm font-medium text-gray-800">Spécialité</label>
-          <input
-            type="text"
-            id="specialty"
-            name="specialty"
-            value={formData.specialty}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre spécialité"
-            required
-          />
-          {errors.specialty && <p className="text-red-600 text-sm mt-2">{errors.specialty}</p>}
+          {errors.password && <p className="text-red-600 text-sm mt-2">{errors.password}</p>}
         </div>
 
         {/* Bouton d'inscription */}
@@ -140,11 +134,7 @@ const RegisterCandidat = () => {
             className="px-8 py-3 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300"
             disabled={loading}
           >
-            {loading ? (
-              <span className="loader">Chargement...</span>
-            ) : (
-              "S'inscrire"
-            )}
+            {loading ? 'Chargement...' : "S'inscrire"}
           </button>
         </div>
       </form>
