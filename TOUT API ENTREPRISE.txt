@@ -1,0 +1,56 @@
+ 1. GET - Récupérer toutes les entreprises
+➤ Méthode : GET
+URL : http://127.0.0.1:8000/api/entreprises
+
+Body : Aucun
+
+✅ Résultat attendu : Liste des entreprises en JSON
+
+🧪 2. POST - Créer une nouvelle entreprise
+➤ Méthode : POST
+URL : http://127.0.0.1:8000/api/entreprises
+
+Body : Choisir Body > raw > JSON, puis :
+
+json
+Copier
+Modifier
+{
+  "nom": "Tech Innov",
+  "description": "Entreprise spécialisée en IA",
+  "secteur": "Technologie",
+  "adresse": "Casablanca, Maroc",
+  "site_web": "https://techinnov.ma"
+}
+✅ Résultat attendu : JSON avec l'entreprise créée et un status code 201
+
+🧪 3. GET - Récupérer une entreprise par ID
+➤ Méthode : GET
+URL : http://127.0.0.1:8000/api/entreprises/1 (remplace 1 par un ID existant)
+
+✅ Résultat attendu : Les détails de l’entreprise avec cet ID
+
+🧪 4. PUT - Modifier une entreprise
+➤ Méthode : PUT
+URL : http://127.0.0.1:8000/api/entreprises/1 (remplace 1 par l’ID de l’entreprise)
+
+Body > raw > JSON :
+
+json
+Copier
+Modifier
+{
+  "nom": "Tech Innov Updated",
+  "description": "Nouvelle description",
+  "secteur": "Innovation",
+  "adresse": "Rabat, Maroc",
+  "site_web": "https://updated-tech.ma"
+}
+✅ Résultat attendu : L'entreprise mise à jour
+
+🧪 5. DELETE - Supprimer une entreprise
+➤ Méthode : DELETE
+URL : http://127.0.0.1:8000/api/entreprises/1 (remplace 1 par l’ID à supprimer)
+
+✅ Résultat attendu : {"message": "Entreprise supprimée"}
+

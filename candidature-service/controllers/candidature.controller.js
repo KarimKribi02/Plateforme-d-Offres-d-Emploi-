@@ -4,7 +4,7 @@ const axios = require('axios');
 
 exports.create = async (req, res) => {
   try {
-    const { offreId, message } = req.body;
+    const { offreId, message , candidatId } = req.body;
 
     // Vérifie que l'offre existe dans le service Laravel
     const offreResponse = await axios.get(`http://localhost:8000/api/offres/${offreId}`);
@@ -16,7 +16,9 @@ exports.create = async (req, res) => {
     const candidature = new Candidature({
       offreId,
       message,
-      candidatId: req.user.id,
+      // candidatId: req.user.id,
+      candidatId, // temporaire, à envoyer depuis Postman
+
       statut: "en attente"
     });
 
@@ -30,10 +32,21 @@ exports.create = async (req, res) => {
 };
 
 
+// exports.myCandidatures = async (req, res) => {
+//   const candidatures = await Candidature.find({ candidatId: req.user.id });
+//   res.json(candidatures);
+// };
 exports.myCandidatures = async (req, res) => {
-  const candidatures = await Candidature.find({ candidatId: req.user.id });
+  const { candidatId } = req.query;
+
+  if (!candidatId) {
+    return res.status(400).json({ message: "candidatId requis dans les paramètres." });
+  }
+
+  const candidatures = await Candidature.find({ candidatId });
   res.json(candidatures);
 };
+
 
 exports.updateStatut = async (req, res) => {
     try {

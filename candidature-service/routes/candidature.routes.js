@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth.middleware');
-const controller = require('../controllers/candidature.controller');
+const candidatureController = require('../controllers/candidature.controller');
+// const authMiddleware = require('../middleware/auth'); // Si tu protèges les routes
 
-router.post('/', auth, controller.create);
-router.get('/me', auth, controller.myCandidatures);
-router.put('/:id/statut', auth, controller.updateStatut);
+router.post('/', candidatureController.create);
+router.get('/mine', candidatureController.myCandidatures);
 
+router.put('/:id/statut', candidatureController.updateStatut);
 
 module.exports = router;

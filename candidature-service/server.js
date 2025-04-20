@@ -5,7 +5,8 @@ const candidatureRoutes = require('./routes/candidature.routes');
 
 const app = express();
 app.use(express.json());
-app.use('/api/candidatures', candidatureRoutes);
+app.use('/api/candidatures', require('./routes/candidature.routes'));
+
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
