@@ -8,7 +8,7 @@ const app = express(); // 👈 Déclarer l'app d'abord !
 
 // ✅ Utiliser cors après avoir créé l'app
 app.use(cors({
-  origin: 'http://localhost:5173', // autorise uniquement ton frontend
+  origin: 'http://localhost:5173', 
   credentials: true,
 }));
 
