@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Layout from '../components/Layout';
 
 // Exemple d'offres fictives
 const initialOffres = [
@@ -75,6 +76,7 @@ const MesOffres = () => {
   };
 
   return (
+    <Layout>
     <div className="container mx-auto px-6 py-8">
       <h2 className="text-3xl font-semibold mb-6">Mes offres publiées</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -183,6 +185,7 @@ const MesOffres = () => {
         </div>
       )}
     </div>
+    </Layout>
   );
 };
 

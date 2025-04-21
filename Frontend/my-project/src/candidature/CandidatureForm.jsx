@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import Layout from '../components/Layout';
 
 function CandidatureForm() {
   const location = useLocation();
@@ -25,8 +26,9 @@ function CandidatureForm() {
   };
 
   return (
+    <Layout>
     <div className="p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-semibold text-center text-violet-700 mb-6">Candidature pour : {offre.title}</h2>
+      <h2 className="text-3xl font-semibold text-center text-violet-700 mb-6"> {offre.title}</h2>
       <p className="text-lg text-center mb-6"><strong>Entreprise :</strong> {offre.company}</p>
       <p className="text-gray-600 text-center mb-8">{offre.description}</p>
 
@@ -77,12 +79,13 @@ function CandidatureForm() {
 
         <button
           type="submit"
-          className="w-full py-3 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300"
+          className="px-8 py-4 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300 w-full sm:w-auto"
         >
           Envoyer la candidature
         </button>
       </form>
     </div>
+    </Layout>
   );
 }
 

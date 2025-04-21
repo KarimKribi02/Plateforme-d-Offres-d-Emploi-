@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Layout from '../components/Layout';
 
 
 const offresData = [
@@ -86,6 +87,7 @@ const RechercheOffres = () => {
   };
 
   return (
+    <Layout>
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-3xl font-semibold mb-6 text-center">Recherche d'offres</h2>
       
@@ -164,49 +166,54 @@ const RechercheOffres = () => {
         )}
       </div>
 
-      {/* Modal pour afficher les détails de l'offre */}
-      {isModalOpen && selectedOffre && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
-            <h3 className="text-2xl font-semibold mb-4">{selectedOffre.title}</h3>
-            <p className="text-sm text-gray-600 mb-2">{selectedOffre.company}</p>
-            <p className="text-sm text-gray-500 mb-4">{selectedOffre.location}</p>
-            
-            {/* Informations supplémentaires sur l'entreprise et le poste */}
-            <div className="mb-4">
-              <h4 className="text-lg font-semibold">À propos de l'entreprise :</h4>
-              <p className="text-gray-700">{selectedOffre.companyDescription}</p>
-            </div>
-            <div className="mb-4">
-              <h4 className="text-lg font-semibold">Description du poste :</h4>
-              <p className="text-gray-700">{selectedOffre.jobDescription}</p>
-            </div>
-            <div className="mb-4">
-              <h4 className="text-lg font-semibold">Exigences :</h4>
-              <p className="text-gray-700">{selectedOffre.requirements}</p>
-            </div>
-
-            <p className="text-sm text-gray-400 mb-4">Publié le : {selectedOffre.date}</p>
-
-            {/* Bouton Postuler */}
-            <div className="mt-4 text-right">
-              <button
-                 onClick={() => handlePostuler(selectedOffre)}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition duration-300"
-              >
-                Postuler
-              </button>
-              <button
-                onClick={closeModal}
-                className="ml-4 px-6 py-3 bg-gray-300 text-gray-700 rounded-xl shadow-lg hover:bg-gray-400 transition duration-300"
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
+     {/* Modal pour afficher les détails de l'offre */}
+{isModalOpen && selectedOffre && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white rounded-2xl p-8 shadow-2xl w-full max-w-2xl mx-4">
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h3 className="text-3xl font-bold  justify-center text-blue-600 mb-2">{selectedOffre.title}</h3>
+          <p className="text-sm text-gray-600">{selectedOffre.company} • {selectedOffre.location}</p>
         </div>
-      )}
+        <button onClick={closeModal} className="text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
+      </div>
+
+      <div className="space-y-4 text-gray-700">
+        <div>
+          <h4 className="text-lg font-semibold text-gray-800">À propos de l'entreprise :</h4>
+          <p>{selectedOffre.companyDescription}</p>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold text-gray-800">Description du poste :</h4>
+          <p>{selectedOffre.jobDescription}</p>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold text-gray-800">Exigences :</h4>
+          <p>{selectedOffre.requirements}</p>
+        </div>
+        <p className="text-sm text-gray-500">📅 Publié le : {selectedOffre.date}</p>
+      </div>
+
+      <div className="mt-6 flex justify-end space-x-4">
+        <button
+          onClick={() => handlePostuler(selectedOffre)}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-2 rounded-xl font-medium shadow hover:from-blue-600 hover:to-blue-800 transition"
+        >
+          Postuler
+        </button>
+        <button
+          onClick={closeModal}
+          className="bg-gray-200 text-gray-700 px-6 py-2 rounded-xl font-medium shadow hover:bg-gray-300 transition"
+        >
+          Fermer
+        </button>
+      </div>
     </div>
+  </div>
+)}
+
+    </div>
+    </Layout>
   );
 };
 

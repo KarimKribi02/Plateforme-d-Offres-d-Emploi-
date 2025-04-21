@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Layout from '../components/Layout';
 
 const RegisterCandidat = () => {
   const navigate = useNavigate(); // Hook de redirection
@@ -62,93 +63,97 @@ const RegisterCandidat = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h2 className="text-4xl font-semibold mb-6 text-center text-violet-700">Inscription - Candidat</h2>
-      <p className="text-lg text-gray-600 mb-12 text-center">
-        Rejoignez notre plateforme et postulez à des offres de stage adaptées à votre profil.
-      </p>
+    <Layout>
+  <div className="container mx-auto px-2 py-1 max-w-3xl pt-2">
+  <div className="bg-white p-10 rounded-2xl shadow-lg border border-gray-200">
+    <h2 className="text-3xl font-semibold mb-6 text-center text-violet-600">
+      Créez votre compte candidat et postulez aux offres de stage
+    </h2>
+    <p className="text-lg text-gray-600 mb-12 text-center">
+      Rejoignez notre plateforme et accédez à des offres de stage sur mesure. Remplissez vos informations et commencez à postuler aux opportunités qui correspondent à votre profil en quelques clics.
+    </p>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Champ pour le nom complet */}
-        <div className="mb-6">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-800">Nom complet</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre nom complet"
-            required
-          />
-          {errors.name && <p className="text-red-600 text-sm mt-2">{errors.name}</p>}
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Champ pour le nom complet */}
+      <div>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-800">Nom complet</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full px-6 py-4 border rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="Votre nom complet"
+          required
+        />
+        {errors.name && <p className="text-red-600 text-sm mt-2">{errors.name}</p>}
+      </div>
 
-        {/* Champ pour l'email */}
-        <div className="mb-6">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-800">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre email"
-            required
-          />
-          {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email}</p>}
-        </div>
+      {/* Champ pour l'email */}
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-800">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full px-6 py-4 border rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="Votre email"
+          required
+        />
+        {errors.email && <p className="text-red-600 text-sm mt-2">{errors.email}</p>}
+      </div>
 
-        {/* Champ pour le numéro de téléphone */}
-        <div className="mb-6">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-800">Numéro de téléphone</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre numéro de téléphone"
-            required
-          />
-          {errors.phone && <p className="text-red-600 text-sm mt-2">{errors.phone}</p>}
-        </div>
+      {/* Champ pour le numéro de téléphone */}
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-800">Numéro de téléphone</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          className="w-full px-6 py-4 border rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="Votre numéro de téléphone"
+          required
+        />
+        {errors.phone && <p className="text-red-600 text-sm mt-2">{errors.phone}</p>}
+      </div>
 
-        {/* Champ pour la spécialité */}
-        <div className="mb-6">
-          <label htmlFor="specialty" className="block text-sm font-medium text-gray-800">Spécialité</label>
-          <input
-            type="text"
-            id="specialty"
-            name="specialty"
-            value={formData.specialty}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Votre spécialité"
-            required
-          />
-          {errors.specialty && <p className="text-red-600 text-sm mt-2">{errors.specialty}</p>}
-        </div>
+      {/* Champ pour la spécialité */}
+      <div>
+        <label htmlFor="specialty" className="block text-sm font-medium text-gray-800">Spécialité</label>
+        <input
+          type="text"
+          id="specialty"
+          name="specialty"
+          value={formData.specialty}
+          onChange={handleChange}
+          className="w-full px-6 py-4 border rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="Votre spécialité"
+          required
+        />
+        {errors.specialty && <p className="text-red-600 text-sm mt-2">{errors.specialty}</p>}
+      </div>
 
-        {/* Bouton d'inscription */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-8 py-3 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300"
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loader">Chargement...</span>
-            ) : (
-              "S'inscrire"
-            )}
-          </button>
-        </div>
-      </form>
+      {/* Bouton d'inscription */}
+      <div className="flex justify-center">
+        <button
+          type="submit"
+          className="px-8 py-4 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300 w-full sm:w-auto"
+          disabled={loading}
+        >
+          {loading ? "Chargement..." : "S'inscrire"}
+        </button>
+      </div>
+    </form>
     </div>
+  </div>
+</Layout>
+
+  
   );
 };
 
