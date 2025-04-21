@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import Layout from '../components/Layout';
 
 
@@ -39,9 +38,7 @@ const offresData = [
     requirements: "Expérience avec Node.js, MongoDB, et les API REST.",
   },
 ];
-=======
-import axios from "axios";
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
+
 
 const RechercheOffres = () => {
   const navigate = useNavigate();
@@ -167,8 +164,6 @@ const RechercheOffres = () => {
           <p className="text-center text-gray-500 col-span-full">Aucune offre trouvée.</p>
         )}
       </div>
-
-<<<<<<< HEAD
      {/* Modal pour afficher les détails de l'offre */}
 {isModalOpen && selectedOffre && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -177,33 +172,8 @@ const RechercheOffres = () => {
         <div>
           <h3 className="text-3xl font-bold  justify-center text-blue-600 mb-2">{selectedOffre.title}</h3>
           <p className="text-sm text-gray-600">{selectedOffre.company} • {selectedOffre.location}</p>
-=======
-      {isModalOpen && selectedOffre && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-xl p-8 w-full max-w-xl shadow-2xl">
-            <h3 className="text-2xl font-bold mb-2">{selectedOffre.titre}</h3>
-            <p className="text-gray-700 mb-1"><strong>Contrat :</strong> {selectedOffre.type_contrat}</p>
-            <p className="text-gray-700 mb-1"><strong>Localisation :</strong> {selectedOffre.localisation}</p>
-            <p className="text-gray-700 mb-1"><strong>Date limite :</strong> {selectedOffre.date_limite}</p>
-            <p className="text-gray-700 my-4"><strong>Description :</strong> {selectedOffre.description}</p>
-            <p className="text-gray-700"><strong>Secteur :</strong> {selectedOffre.secteur}</p>
 
-            <div className="mt-6 flex justify-end space-x-4">
-              <button
-                onClick={() => handlePostuler(selectedOffre)}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                Postuler
-              </button>
-              <button
-                onClick={closeModal}
-                className="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
-              >
-                Fermer
-              </button>
-            </div>
-          </div>
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
+      
         </div>
         <button onClick={closeModal} className="text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
       </div>

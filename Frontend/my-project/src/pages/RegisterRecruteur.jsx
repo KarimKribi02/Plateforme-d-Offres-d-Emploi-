@@ -16,10 +16,8 @@ const RegisterRecruteur = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-<<<<<<< HEAD
-=======
-  const [apiError, setApiError] = useState('');
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -42,7 +40,7 @@ const RegisterRecruteur = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-<<<<<<< HEAD
+
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/entreprises', {
@@ -62,23 +60,12 @@ const RegisterRecruteur = () => {
       console.error("Erreur lors de l'enregistrement :", error.response?.data || error.message);
       alert("Une erreur est survenue lors de l'inscription.");
       setLoading(false);
-=======
-    setApiError('');
 
-    try {
-      await axios.post('http://127.0.0.1:8000/api/entreprises', formData);
-      navigate('/recruteur/creer-offre');
-    } catch (error) {
-      console.error(error);
-      setApiError("Erreur lors de l'enregistrement de l'entreprise.");
-    } finally {
-      setLoading(false);
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
     }
   };
 
   return (
-<<<<<<< HEAD
+
     <Layout>
       <div className="container mx-auto px-2 py-1 max-w-3xl pt-2">
         <div className="bg-white p-10 rounded-2xl shadow-lg border border-gray-200">
@@ -173,101 +160,8 @@ const RegisterRecruteur = () => {
               </button>
             </div>
           </form>
-=======
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h2 className="text-4xl font-semibold mb-6 text-center text-violet-700">Créer une entreprise</h2>
 
-      {apiError && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-center">
-          {apiError}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Nom */}
-        <div>
-          <label htmlFor="nom" className="block text-sm font-medium text-gray-800">Nom de l'entreprise</label>
-          <input
-            type="text"
-            id="nom"
-            value={formData.nom}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-violet-500"
-            placeholder="Ex: Tech Reda"
-            required
-          />
-          {errors.nom && <p className="text-red-600 text-sm mt-2">{errors.nom}</p>}
-        </div>
-
-        {/* Description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-800">Description</label>
-          <textarea
-            id="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-violet-500"
-            placeholder="Entreprise innovante..."
-            required
-          ></textarea>
-          {errors.description && <p className="text-red-600 text-sm mt-2">{errors.description}</p>}
-        </div>
-
-        {/* Secteur */}
-        <div>
-          <label htmlFor="secteur" className="block text-sm font-medium text-gray-800">Secteur d'activité</label>
-          <input
-            type="text"
-            id="secteur"
-            value={formData.secteur}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-violet-500"
-            placeholder="Ex: IT, Finance, Agroalimentaire..."
-            required
-          />
-          {errors.secteur && <p className="text-red-600 text-sm mt-2">{errors.secteur}</p>}
-        </div>
-
-        {/* Adresse */}
-        <div>
-          <label htmlFor="adresse" className="block text-sm font-medium text-gray-800">Adresse</label>
-          <input
-            type="text"
-            id="adresse"
-            value={formData.adresse}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-violet-500"
-            placeholder="Ex: Casablanca"
-            required
-          />
-          {errors.adresse && <p className="text-red-600 text-sm mt-2">{errors.adresse}</p>}
-        </div>
-
-        {/* Site web */}
-        <div>
-          <label htmlFor="site_web" className="block text-sm font-medium text-gray-800">Site web</label>
-          <input
-            type="url"
-            id="site_web"
-            value={formData.site_web}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-violet-500"
-            placeholder="https://www.entreprise.com"
-            required
-          />
-          {errors.site_web && <p className="text-red-600 text-sm mt-2">{errors.site_web}</p>}
-        </div>
-
-        {/* Bouton */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-8 py-3 bg-violet-600 text-white rounded-xl shadow-lg hover:bg-violet-700 transition duration-300"
-            disabled={loading}
-          >
-            {loading ? "Chargement..." : "Créer l'entreprise"}
-          </button>
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
+    
         </div>
       </div>
     </Layout>
