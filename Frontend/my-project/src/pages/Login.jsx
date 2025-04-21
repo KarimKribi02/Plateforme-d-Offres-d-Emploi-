@@ -1,7 +1,42 @@
+<<<<<<< HEAD
 import React from "react";
 import { Link } from "react-router-dom";
+=======
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+>>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await axios.post("http://localhost:3001/api/auth/login", {
+        email,
+        password,
+      });
+
+      const { token, user } = response.data;
+
+      // Stocker le token si nécessaire (localStorage ou context)
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirection après connexion
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Erreur de connexion :", err);
+      setError("Email ou mot de passe incorrect.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 via-white to-blue-100 px-4">
             {/* Navbar */}
@@ -31,12 +66,14 @@ const Login = () => {
         <div className="p-8 flex flex-col justify-center">
           <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">Connexion</h2>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Adresse email</label>
               <input
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="exemple@email.com"
                 required
@@ -48,11 +85,15 @@ const Login = () => {
               <input
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholder="********"
                 required
               />
             </div>
+
+            {error && <p className="text-red-600 text-sm text-center">{error}</p>}
 
             <button
               type="submit"

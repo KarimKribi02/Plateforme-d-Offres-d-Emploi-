@@ -1,0 +1,101 @@
+ 1. GET - Lister toutes les offres (avec ou sans filtres)
+➤ Méthode : GET
+URL :
+
+arduino
+Copier
+Modifier
+http://127.0.0.1:8000/api/offres
+Avec filtres ? Ajoute-les en params dans Postman :
+
+secteur=Informatique
+
+type_contrat=CDI
+
+localisation=Casablanca
+
+motcle=Développeur
+
+✅ Résultat attendu : Liste des offres filtrées
+
+🧪 2. POST - Créer une nouvelle offre
+➤ Méthode : POST
+URL :
+
+arduino
+Copier
+Modifier
+http://127.0.0.1:8000/api/offres
+Body > raw > JSON :
+
+json
+Copier
+Modifier
+{
+  "entreprise_id": 1,
+  "titre": "Développeur Full-Stack",
+  "description": "Nous recherchons un développeur Full-Stack Laravel/React.",
+  "type_contrat": "CDI",
+  "localisation": "Rabat",
+  "secteur": "Informatique",
+  "date_limite": "2025-05-15"
+}
+✅ Résultat attendu : Offre créée, avec status 201
+
+🧪 3. GET - Afficher une offre par ID
+➤ Méthode : GET
+URL :
+
+ruby
+Copier
+Modifier
+http://127.0.0.1:8000/api/offres/1
+(remplace 1 par un ID existant)
+
+✅ Résultat attendu : Détails de l’offre
+
+🧪 4. PUT - Mettre à jour une offre
+➤ Méthode : PUT
+URL :
+
+ruby
+Copier
+Modifier
+http://127.0.0.1:8000/api/offres/1
+Body > raw > JSON :
+
+json
+Copier
+Modifier
+{
+  "titre": "Développeur Full-Stack (MAJ)",
+  "description": "Mise à jour de l'offre",
+  "type_contrat": "CDD",
+  "localisation": "Casablanca",
+  "secteur": "Tech",
+  "date_limite": "2025-06-01"
+}
+✅ Résultat attendu : L’offre mise à jour
+
+🧪 5. DELETE - Supprimer une offre
+➤ Méthode : DELETE
+URL :
+
+ruby
+Copier
+Modifier
+http://127.0.0.1:8000/api/offres/1
+✅ Résultat attendu :
+
+json
+Copier
+Modifier
+{ "message": "Offre supprimée" }
+🔄 Résumé des Routes
+
+Méthode	URL	Description
+GET	/api/offres	Lister les offres (+ filtres)
+POST	/api/offres	Créer une offre
+GET	/api/offres/{id}	Afficher une offre
+PUT	/api/offres/{id}	Modifier une offre
+DELETE	/api/offres/{id}	Supprimer une offre
