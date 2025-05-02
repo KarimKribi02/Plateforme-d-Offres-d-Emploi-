@@ -71,7 +71,7 @@ const RegisterCandidat = () => {
   };
 
   return (
-<<<<<<< HEAD
+
     <Layout>
   <div className="container mx-auto px-2 py-1 max-w-3xl pt-2">
   <div className="bg-white p-10 rounded-2xl shadow-lg border border-gray-200">
@@ -227,9 +227,9 @@ const RegisterCandidat = () => {
           </button>
         </div>
       </form>
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
+
     </div>
-  </div>
+  </div></div>
 </Layout>
 
   

@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 import React from "react";
 import { Link } from "react-router-dom";
-=======
-import React, { useState } from "react";
+import  { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
->>>>>>> 4120b81b686e97e24086e5120ca26189a3e706dc
 
 const Login = () => {
   const navigate = useNavigate();

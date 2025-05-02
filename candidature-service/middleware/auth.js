@@ -12,6 +12,10 @@ module.exports = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // même secret que dans le microservice auth
     req.user = decoded; // { id, email, role }
+    
+    // For admin routes, if we're checking role-specific access
+    // the controller will handle the permission checks
+    
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Token invalide.' });
