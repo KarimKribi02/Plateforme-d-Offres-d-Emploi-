@@ -1,32 +1,33 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from './pages/HomePage';
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import RegisterRecruteur from "./pages/RegisterRecruteur";  // Page pour le recruteur
-import RegisterCandidat from "./pages/RegisterCandidat"; 
-import CreerOffre from './recruteur/CreerOffre'; // à créer
-import MesOffres from './recruteur/MesOffres';
-import RechercheOffres from './candidature/RechercheOffres';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import JobOffersPage from './JobOffersPage';
+import JobDetailPage from './JobDetailPage';
+import EntrepriseDetailPage from './EntrepriseDetailPage';
+import LoginPage from './LoginPage';
+import AdminDashboard from './AdminDashboard';
+ import RecruteurDashboard from './RecruteurDashboard';
+ import PostulerOffre from './PostulerOffre';
 
-import  CandidatureForm from "./candidature/CandidatureForm"; 
-import './App.css';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} /> 
-        <Route path="/register/recruteur" element={<RegisterRecruteur />} />
-        <Route path="/register/candidat" element={<RegisterCandidat />} />
-        <Route path="/recruteur/creer-offre" element={<CreerOffre />} />
-        <Route path="/recruteur/mes-offres" element={<MesOffres />} />
-        <Route path="/recherche-offres" element={<RechercheOffres />} />
-        <Route path="/Candidature" element={<CandidatureForm />} />
-   
+    <Routes>
+  <Route path="/login" element={<LoginPage />} />
+  {/* <Route path="/register" element={<RegisterPage />} /> */}
 
-        {/* D'autres routes ici */}
+  {/* Redirections par rôle */}
+  
+  <Route path="/recruteur/dashboard" element={<RecruteurDashboard />} />
+  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+  {/* Routes publiques */}
+  {/* <Route path="/" element={<HomePage />} /> */}
+  <Route path="/JobOffersPage" element={<JobOffersPage />} />
+  <Route path="/offres/:id" element={<JobDetailPage />} />
+  <Route path="/entreprises/:name" element={<EntrepriseDetailPage />} />
+  <Route path="/postuler/:id" element={<PostulerOffre />} />
+
+
       </Routes>
     </Router>
   );
