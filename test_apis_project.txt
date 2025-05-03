@@ -1,0 +1,431 @@
+🚀 PLAN DE TEST DES MICROSERVICES DE L'APPLICATION
+
+Ce document propose un plan de test complet pour tester l'ensemble des microservices de l'application dans Postman, dans un ordre logique permettant de valider l'intégration complète du système.
+
+=============================================
+📋 SÉQUENCE DE TEST RECOMMANDÉE
+=============================================
+
+1️⃣ SERVICE D'AUTHENTIFICATION (PORT 3001)
+   - Créer les utilisateurs (admin, recruteur, candidat)
+   - Tester la connexion et obtenir les tokens JWT
+
+2️⃣ SERVICE DE GESTION DES ENTREPRISES & OFFRES D'EMPLOI (PORT 8000)
+   - Créer et gérer les entreprises
+   - Créer et gérer les offres d'emploi
+
+3️⃣ SERVICE DE CANDIDATURE (PORT 3002)
+   - Créer et gérer les candidatures
+   - Tester les fonctionnalités d'administration
+
+4️⃣ SERVICE DE NOTIFICATIONS (PORT 5003)
+   - Vérifier la réception des notifications
+   - Consulter l'historique des notifications
+
+=============================================
+🔍 TESTS DÉTAILLÉS PAR MICROSERVICE
+=============================================
+
+🌟 SERVICE D'AUTHENTIFICATION (PORT 3001)
+------------------------------------------
+
+ÉTAPE 1 : Création d'un administrateur
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/create-admin
+```
+
+Body > raw > JSON :
+```json
+{
+  "name": "Admin Principal",
+  "email": "admin@example.com",
+  "password": "adminpass123",
+  "secretKey": "your_admin_secret_key"
+}
+```
+✅ Statut attendu : 201 Created
+
+⚠️ RÉSOLUTION D'ERREUR : Si vous obtenez l'erreur "Unauthorized: Invalid secret key", vous devez utiliser la valeur correcte pour "secretKey". Cette valeur doit correspondre à la variable d'environnement ADMIN_SECRET_KEY définie dans le fichier .env du service d'authentification. 
+
+Par défaut, vous pouvez essayer les valeurs suivantes :
+```
+secretKey: "admin123"
+```
+ou
+```
+secretKey: "admin_secret_key_for_job_platform"
+```
+
+Si ces valeurs ne fonctionnent pas, vérifiez le fichier .env du service d'authentification pour trouver la valeur correcte.
+
+ÉTAPE 2 : Connexion en tant qu'administrateur
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/login
+```
+
+Body > raw > JSON :
+```json
+{
+  "email": "admin@example.com",
+  "password": "adminpass123"
+}
+```
+✅ Statut attendu : 200 OK
+⚠️ IMPORTANT : Sauvegarder le token JWT reçu comme variable d'environnement "admin_token"
+
+ÉTAPE 3 : Création d'un compte recruteur
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/recruiters
+```
+
+Headers :
+```
+Authorization: Bearer {{admin_token}}
+```
+
+Body > raw > JSON :
+```json
+{
+  "name": "Recruteur Test",
+  "email": "recruteur@example.com",
+  "password": "recruteurpass"
+}
+```
+✅ Statut attendu : 201 Created
+
+ÉTAPE 4 : Vérification de la création du recruteur
+➤ Méthode : GET
+URL :
+```
+http://localhost:3001/api/auth/recruiters
+```
+
+Headers :
+```
+Authorization: Bearer {{admin_token}}
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 5 : Création d'un compte candidat
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/register
+```
+
+Body > raw > JSON :
+```json
+{
+  "name": "Candidat Test",
+  "email": "candidat@example.com",
+  "password": "candidatpass",
+  "role": "candidat"
+}
+```
+✅ Statut attendu : 201 Created
+
+ÉTAPE 6 : Connexion en tant que recruteur
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/login
+```
+
+Body > raw > JSON :
+```json
+{
+  "email": "recruteur@example.com",
+  "password": "recruteurpass"
+}
+```
+✅ Statut attendu : 200 OK
+⚠️ IMPORTANT : Sauvegarder le token JWT reçu comme variable d'environnement "recruteur_token"
+
+ÉTAPE 7 : Connexion en tant que candidat
+➤ Méthode : POST
+URL :
+```
+http://localhost:3001/api/auth/login
+```
+
+Body > raw > JSON :
+```json
+{
+  "email": "candidat@example.com",
+  "password": "candidatpass"
+}
+```
+✅ Statut attendu : 200 OK
+⚠️ IMPORTANT : Sauvegarder le token JWT reçu comme variable d'environnement "candidat_token"
+
+🌟 SERVICE DE GESTION DES ENTREPRISES & OFFRES D'EMPLOI (PORT 8000)
+-------------------------------------------------------------------
+
+ÉTAPE 8 : Création d'une entreprise (Recruteur uniquement)
+➤ Méthode : POST
+URL :
+```
+http://localhost:8000/api/entreprises
+```
+
+Headers :
+```
+Authorization: Bearer {{recruteur_token}}
+```
+
+Body > raw > JSON :
+```json
+{
+  "nom": "Entreprise Test",
+  "description": "Entreprise de test pour les API",
+  "secteur": "Informatique",
+  "adresse": "123 Rue de Test, 75000 Paris",
+  "site_web": "https://entreprise-test.com"
+}
+```
+✅ Statut attendu : 201 Created
+⚠️ IMPORTANT : Sauvegarder l'ID de l'entreprise comme variable d'environnement "entreprise_id"
+
+ÉTAPE 9 : Création d'une offre d'emploi (Recruteur uniquement)
+➤ Méthode : POST
+URL :
+```
+http://localhost:8000/api/offres
+```
+
+Headers :
+```
+Authorization: Bearer {{recruteur_token}}
+```
+
+Body > raw > JSON :
+```json
+{
+  "titre": "Développeur Full Stack",
+  "description": "Nous recherchons un développeur full stack expérimenté",
+  "entreprise_id": "{{entreprise_id}}",
+  "localisation": "Paris",
+  "type_contrat": "CDI",
+  "salaire": "45000-60000€",
+  "competences_requises": ["JavaScript", "Node.js", "React", "MongoDB"]
+}
+```
+✅ Statut attendu : 201 Created
+⚠️ IMPORTANT : Sauvegarder l'ID de l'offre comme variable d'environnement "offre_id"
+
+ÉTAPE 10 : Consultation de toutes les offres d'emploi
+➤ Méthode : GET
+URL :
+```
+http://localhost:8000/api/offres
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 11 : Consultation des détails d'une offre
+➤ Méthode : GET
+URL :
+```
+http://localhost:8000/api/offres/{{offre_id}}
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 12 : Recherche d'offres par critères
+➤ Méthode : GET
+URL :
+```
+http://localhost:8000/api/offres/recherche?localisation=Paris&type_contrat=CDI
+```
+✅ Statut attendu : 200 OK
+
+🌟 SERVICE DE CANDIDATURE (PORT 3002)
+------------------------------------
+
+ÉTAPE 13 : Création d'une candidature par le candidat
+➤ Méthode : POST
+URL :
+```
+http://localhost:3002/api/candidatures
+```
+
+Headers :
+```
+Authorization: Bearer {{candidat_token}}
+```
+
+Body > raw > JSON :
+```json
+{
+  "offreId": "{{offre_id}}",
+  "message": "Je suis très intéressé par ce poste et j'ai les compétences requises."
+}
+```
+✅ Statut attendu : 201 Created
+⚠️ IMPORTANT : Sauvegarder l'ID de la candidature comme variable d'environnement "candidature_id"
+
+ÉTAPE 14 : Consultation des candidatures par le candidat
+➤ Méthode : GET
+URL :
+```
+http://localhost:3002/api/candidatures/mine
+```
+
+Headers :
+```
+Authorization: Bearer {{candidat_token}}
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 15 : Mise à jour du statut d'une candidature par le recruteur
+➤ Méthode : PUT
+URL :
+```
+http://localhost:3002/api/candidatures/{{candidature_id}}/statut
+```
+
+Headers :
+```
+Authorization: Bearer {{recruteur_token}}
+```
+
+Body > raw > JSON :
+```json
+{
+  "statut": "acceptée"
+}
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 16 : Vérification du statut de la candidature par le candidat
+➤ Méthode : GET
+URL :
+```
+http://localhost:3002/api/candidatures/mine
+```
+
+Headers :
+```
+Authorization: Bearer {{candidat_token}}
+```
+✅ Statut attendu : 200 OK
+🔍 Vérifier que le statut de la candidature est maintenant "acceptée"
+
+ÉTAPE 17 : Consultation de toutes les offres par l'administrateur
+➤ Méthode : GET
+URL :
+```
+http://localhost:3002/api/admin/offers
+```
+
+Headers :
+```
+Authorization: Bearer {{admin_token}}
+```
+✅ Statut attendu : 200 OK
+
+ÉTAPE 18 : Consultation de toutes les candidatures par l'administrateur
+➤ Méthode : GET
+URL :
+```
+http://localhost:3002/api/admin/candidatures
+```
+
+Headers :
+```
+Authorization: Bearer {{admin_token}}
+```
+✅ Statut attendu : 200 OK
+
+🌟 SERVICE DE NOTIFICATIONS (PORT 5003)
+--------------------------------------
+
+ÉTAPE 19 : Vérification des notifications générées
+➤ Méthode : GET
+URL :
+```
+http://localhost:5003/notifications
+```
+✅ Statut attendu : 200 OK
+🔍 Vérifier qu'il y a des notifications pour :
+   - La création de la candidature (pour le recruteur)
+   - La mise à jour du statut de la candidature (pour le candidat)
+
+=============================================
+🛠️ CONFIGURATION POSTMAN
+=============================================
+
+1. Créer un environnement "Job Application Platform" avec les variables suivantes :
+   - admin_token
+   - recruteur_token
+   - candidat_token
+   - entreprise_id
+   - offre_id
+   - candidature_id
+
+2. Créer une collection pour chaque microservice :
+   - Auth Service (3001)
+   - Entreprises & Offres Service (8000)
+   - Candidature Service (3002)
+   - Notification Service (5003)
+
+3. Organiser les requêtes dans un ordre logique suivant le plan de test ci-dessus
+
+4. Utiliser la fonction "Tests" de Postman pour automatiser la capture des tokens et IDs :
+   ```javascript
+   // Exemple pour capturer le token d'admin
+   var jsonData = pm.response.json();
+   pm.environment.set("admin_token", jsonData.token);
+   
+   // Exemple pour capturer l'ID de l'offre
+   var jsonData = pm.response.json();
+   pm.environment.set("offre_id", jsonData.id);
+   ```
+
+5. Créer un "Runner" pour exécuter les tests dans l'ordre séquentiel
+
+=============================================
+⚠️ TESTS D'ERREUR RECOMMANDÉS
+=============================================
+
+1. Tentative de connexion avec identifiants invalides
+   ➤ Méthode : POST à /api/auth/login
+   ➤ Résultat attendu : 401 Unauthorized
+
+2. Tentative d'accès aux routes protégées sans token
+   ➤ Méthode : GET à /api/candidatures/mine
+   ➤ Résultat attendu : 401 Unauthorized
+
+3. Tentative d'accès aux routes admin par un utilisateur non-admin
+   ➤ Méthode : GET à /api/admin/candidatures avec token candidat
+   ➤ Résultat attendu : 403 Forbidden
+
+4. Tentative de modification du statut d'une candidature par un candidat
+   ➤ Méthode : PUT à /api/candidatures/{{candidature_id}}/statut avec token candidat
+   ➤ Résultat attendu : 403 Forbidden
+
+5. Tentative de création d'une offre avec une entreprise inexistante
+   ➤ Méthode : POST à /api/offres avec un entreprise_id invalide
+   ➤ Résultat attendu : 400 Bad Request
+
+6. Tentative de création d'une candidature pour une offre inexistante
+   ➤ Méthode : POST à /api/candidatures avec un offreId invalide
+   ➤ Résultat attendu : 404 Not Found
+
+=============================================
+📊 RÉSUMÉ DES DÉPENDANCES ENTRE SERVICES
+=============================================
+
+1. Le service d'authentification doit être testé en premier car il fournit les tokens JWT nécessaires pour accéder aux autres services.
+
+2. Le service de gestion des entreprises et offres doit être testé avant le service de candidature, car les candidatures font référence aux offres d'emploi.
+
+3. Le service de candidature dépend du service d'authentification pour la validation des tokens et du service d'offres pour la vérification des offres.
+
+4. Le service de notifications réagit aux événements des autres services (création de candidature, mise à jour de statut) et doit donc être testé en dernier.
+
+5. Pour un test complet, il est recommandé de suivre l'ordre exact des étapes décrites ci-dessus. 
