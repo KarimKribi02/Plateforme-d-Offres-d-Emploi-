@@ -14,15 +14,17 @@ return new class extends Migration
    // database/migrations/xxxx_xx_xx_create_entreprises_table.php
 public function up()
 {
-    Schema::create('entreprises', function (Blueprint $table) {
-        $table->id();
-        $table->string('nom');
-        $table->text('description')->nullable();
-        $table->string('secteur')->nullable();
-        $table->string('adresse')->nullable();
-        $table->string('site_web')->nullable();
-        $table->timestamps();
-    });
+    // Dans la migration pour créer la table entreprises
+Schema::create('entreprises', function (Blueprint $table) {
+    $table->id();
+    $table->string('nom');
+    $table->text('description');
+    $table->string('secteur');
+    $table->string('adresse');
+    $table->string('site_web')->nullable();
+    $table->string('recruteur_id'); // Colonne simple de type string, sans contrainte de clé étrangère
+    $table->timestamps();
+});
 }
 
 

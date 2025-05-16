@@ -14,24 +14,22 @@ class EntrepriseController extends Controller
         return Entreprise::all();
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nom' => 'required|string',
-            'description' => 'nullable|string',
-            'secteur' => 'nullable|string',
-            'adresse' => 'nullable|string',
-            'site_web' => 'nullable|url',
-        ]);
-    
-        $entreprise = Entreprise::create([
-            ...$validated,
-            'recruteur_id' => $request->user_id, // en attendant de parser le JWT proprement
-        ]);
-    
-        return response()->json($entreprise, 201);
-    }
-    
+public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'nom' => 'required|string|max:255',
+        'description' => 'required|string',
+        'secteur' => 'required|string',
+        'adresse' => 'required|string',
+        'site_web' => 'nullable|url',
+        'recruteur_id' => 'required|string', // On garde ce champ mais sans vérifier son existence
+    ]);
+
+    // Créer l'entreprise sans vérifier l'existence du recruteur
+    $entreprise = Entreprise::create($validatedData);
+
+    return response()->json($entreprise, 201);
+}
 
     public function show($id)
     {

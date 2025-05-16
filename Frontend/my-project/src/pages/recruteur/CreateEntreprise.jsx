@@ -26,46 +26,62 @@ export default function CreateEntreprise() {
   };
 
   // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  // Dans votre fonction handleSubmit du composant CreateEntreprise:
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    const token = localStorage.getItem('recruteur_token');
+  const token = localStorage.getItem('token');
+  const recruteurId = localStorage.getItem('user_id');
+  
+  console.log("Token:", token);
+  console.log("Recruteur ID:", recruteurId);
 
-    try {
-      const response = await axios.post(
-        'http://localhost:8000/api/entreprises',
-        formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      // Sauvegarde de l'ID de l'entreprise dans le localStorage
-      const entrepriseId = response.data.id;
-      localStorage.setItem('entreprise_id', entrepriseId);
-
-      setSuccess('Entreprise créée avec succès');
-      setError(null);
-      
-      // Reset form data after successful submission
-      setFormData({
-        nom: '',
-        description: '',
-        secteur: '',
-        adresse: '',
-        site_web: ''
-      });
-    } catch (err) {
-      setError('Erreur lors de la création de l\'entreprise');
-      setSuccess(null);
-    } finally {
-      setIsSubmitting(false);
-    }
+  // Ajoutez le recruteur_id aux données du formulaire
+  const entrepriseData = {
+    ...formData,
+    recruteur_id: recruteurId
   };
+
+  console.log("Données à envoyer:", entrepriseData);
+
+  try {
+    const response = await axios.post(
+      'http://localhost:8000/api/entreprises',
+      entrepriseData,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log("Réponse du serveur:", response.data);
+    
+    // Sauvegarde de l'ID de l'entreprise
+    const entrepriseId = response.data.id;
+    localStorage.setItem('entreprise_id', entrepriseId);
+
+    setSuccess('Entreprise créée avec succès');
+    setError(null);
+    
+    // Réinitialisation du formulaire
+    setFormData({
+      nom: '',
+      description: '',
+      secteur: '',
+      adresse: '',
+      site_web: ''
+    });
+  } catch (err) {
+    console.error("Erreur détaillée:", err.response ? err.response.data : err);
+    setError(`Erreur lors de la création de l'entreprise: ${err.response ? err.response.data.message || JSON.stringify(err.response.data) : err.message}`);
+    setSuccess(null);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

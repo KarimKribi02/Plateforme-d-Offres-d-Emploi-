@@ -27,20 +27,24 @@ export default function Login() {
       
       const data = await response.json();
       
-      if (response.ok && data.token) {
-        // Sauvegarde du token dans le localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role); // Stocke également le rôle (admin, recruteur, candidat)
-        
-        // Redirection selon le rôle
-        if (data.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else if (data.role === 'recruteur') {
-          navigate('/recruteur/dashboard');
-        } else if (data.role === 'candidat') {
-          navigate('/');
-        }
-      } else {
+      // Dans votre fonction handleSubmit du composant Login, modifiez:
+if (response.ok && data.token) {
+  // Sauvegarde du token dans le localStorage
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('role', data.role); // Stocke également le rôle (admin, recruteur, candidat)
+  
+  // Ajoutez cette ligne pour sauvegarder l'ID
+  localStorage.setItem('user_id', data.id);
+  
+  // Redirection selon le rôle
+  if (data.role === 'admin') {
+    navigate('/admin/dashboard');
+  } else if (data.role === 'recruteur') {
+    navigate('/recruteur/dashboard');
+  } else if (data.role === 'candidat') {
+    navigate('/');
+  }
+} else {
         // Si la connexion échoue
         setError(data.message || 'Erreur de connexion, vérifiez vos identifiants.');
       }

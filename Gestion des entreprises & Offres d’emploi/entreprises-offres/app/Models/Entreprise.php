@@ -15,24 +15,21 @@ class Entreprise extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nom',
-        'description',
-        'secteur',
-        'adresse',
-        'site_web',
-        'recruteur_id'
-    ];
-    
+   // Dans le modèle Entreprise.php
+protected $fillable = [
+    'nom',
+    'description',
+    'secteur',
+    'adresse',
+    'site_web',
+    'recruteur_id' // S'assurer que ce champ est inclus
+];
 
     public function offres()
     {
         return $this->hasMany(Offre::class);
     }
-    public function recruteur() {
-        return $this->belongsTo(User::class, 'recruteur_id');
-    }
-    
+   
     
 }
 
