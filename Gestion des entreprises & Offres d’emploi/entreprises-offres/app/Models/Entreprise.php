@@ -21,11 +21,18 @@ class Entreprise extends Model
         'secteur',
         'adresse',
         'site_web',
+        'recruteur_id'
     ];
+    
 
     public function offres()
     {
         return $this->hasMany(Offre::class);
     }
+    public function recruteur() {
+        return $this->belongsTo(User::class, 'recruteur_id');
+    }
+    
+    
 }
 

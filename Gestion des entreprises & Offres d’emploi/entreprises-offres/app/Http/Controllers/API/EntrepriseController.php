@@ -23,10 +23,15 @@ class EntrepriseController extends Controller
             'adresse' => 'nullable|string',
             'site_web' => 'nullable|url',
         ]);
-
-        $entreprise = Entreprise::create($validated);
+    
+        $entreprise = Entreprise::create([
+            ...$validated,
+            'recruteur_id' => $request->user_id, // en attendant de parser le JWT proprement
+        ]);
+    
         return response()->json($entreprise, 201);
     }
+    
 
     public function show($id)
     {
