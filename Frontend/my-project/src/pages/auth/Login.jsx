@@ -42,7 +42,7 @@ if (response.ok && data.token) {
   } else if (data.role === 'recruteur') {
     navigate('/recruteur/dashboard');
   } else if (data.role === 'candidat') {
-    navigate('/');
+    navigate('/candidat/home');
   }
 } else {
         // Si la connexion échoue

@@ -20,32 +20,21 @@ import CreateOffre from './pages/recruteur/CreateOffre';
 import OffresRecruteur from './pages/recruteur/OffresRecruteur';
 import Candidats from './pages/recruteur/Candidats';
 import CandidatureDetail from './pages/recruteur/CandidatureDetail';
-// Pages Candidat
-import DashboardCandidat from './pages/candidat/Dashboard';
-import OffresCandidat from './pages/candidat/Offres';
-import MesCandidatures from './pages/candidat/MesCandidatures';
-import OffreDetail from './pages/candidat/OffreDetail';
-import PagePostuler from './pages/candidat/PagePostuler';
-
+// candidatureDetail
+import HomeCandidat from './pages/candidat/HomeCandidat';
+import OffresCandidat from './pages/candidat/OffresCandidat';
+import ProfilCandidat from './pages/candidat/ProfilCandidat';
+import OffreDetailCandidat from './pages/candidat/OffreDetailCandidat';
 
 // Auth
 import Login from './pages/auth/Login';
 import RegisterCandidat from './pages/auth/RegisterCandidat';
 
 
-// Pages générales
- import Accueil from './pages/Accueil'; // N'oublie pas de créer ce fichier
- 
-// import Register from './pages/auth/Register'; // Optionnel si tu as une page d'inscription générale
-// import Offres from './pages/Offres'; // Optionnel si tu veux une page publique des offres
-
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Accueil */}
-        <Route path="/" element={<Accueil />} />
-       
         {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register/candidat" element={<RegisterCandidat />} />
@@ -69,15 +58,13 @@ function App() {
           <Route path="candidats/:id" element={<CandidatureDetail />} />
 
         </Route>
-
         {/* Candidat */}
-        <Route path="/candidat/*" element={<CandidatLayout />}>
-          <Route path="dashboard" element={<DashboardCandidat />} />
-          <Route path="offres" element={<OffresCandidat />} />
-          <Route path="mes-candidatures" element={<MesCandidatures />} />
-          <Route path="offres/:id" element={<OffreDetail />} />
-          <Route path="postuler/:id" element={<PagePostuler />} />
-        </Route>
+    <Route path="/candidat/*" element={<CandidatLayout />}>
+  <Route path="home" element={<HomeCandidat />} />
+  <Route path="offres" element={<OffresCandidat />} />
+  <Route path="offres/:id" element={<OffreDetailCandidat />} />
+  <Route path="profil" element={<ProfilCandidat />} />
+</Route>
       </Routes>
     </Router>
   );
