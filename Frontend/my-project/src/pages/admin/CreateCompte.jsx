@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { CheckCircle, AlertCircle, User, Mail, Lock } from 'lucide-react';
 
 export default function CreateCompte() {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ export default function CreateCompte() {
 
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,9 +25,13 @@ export default function CreateCompte() {
     e.preventDefault();
     setSuccess('');
     setError('');
+    setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('token'); // Assurez-vous que le token admin est bien stocké ici
+      const token = localStorage.getItem('token');
+
+      // Simulons un délai pour voir l'animation de chargement
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       const response = await fetch('http://localhost:3001/api/auth/recruiters', {
         method: 'POST',
@@ -45,115 +51,185 @@ export default function CreateCompte() {
       setFormData({ name: '', email: '', password: '' });
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-blue-600 py-4">
-          <h2 className="text-center text-2xl font-extrabold text-white">
-            Créer un compte recruteur
-          </h2>
-        </div>
-        
-        <div className="p-6">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Nom
-              </label>
-              <div className="mt-1">
-                <input
-                  id="name"
-                  type="text"
-                  name="name"
-                  placeholder="Nom complet"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-blue-400 to-blue-600 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden border border-white border-opacity-20">
+          <motion.div 
+            className="bg-blue-600 py-6 relative overflow-hidden"
+            initial={{ height: "4rem" }}
+            animate={{ height: "5rem" }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Cercles décoratifs animés */}
+            <motion.div 
+              className="absolute top-4 right-4 w-32 h-32 bg-blue-400 rounded-full opacity-20"
+              animate={{ 
+                scale: [1, 1.2, 1],
+                rotate: [0, 90, 0],
+              }}
+              transition={{ repeat: Infinity, duration: 8 }}
+            />
+            <motion.div 
+              className="absolute bottom-0 left-12 w-16 h-16 bg-blue-300 rounded-full opacity-20"
+              animate={{ 
+                scale: [1, 1.3, 1],
+                x: [0, 20, 0],
+              }}
+              transition={{ repeat: Infinity, duration: 6, delay: 1 }}
+            />
             
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  placeholder="exemple@email.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mot de passe
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+            <h2 className="text-center text-2xl font-bold text-white relative z-10">
+              Créer un compte recruteur
+            </h2>
+          </motion.div>
+          
+          <div className="p-8">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
               >
-                Créer le compte
-              </button>
-            </div>
-            
-            {success && (
-              <div className="bg-green-50 border-l-4 border-green-400 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-green-700">{success}</p>
-                  </div>
+                <label htmlFor="name" className="block text-sm font-medium text-white">
+                  Nom
+                </label>
+                <div className="mt-1 relative">
+                  <span className="absolute left-3 top-3 text-blue-200">
+                    <User size={18} />
+                  </span>
+                  <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="Nom complet"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="pl-10 appearance-none block w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg shadow-sm placeholder-blue-200 text-white focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+                    required
+                  />
                 </div>
-              </div>
-            )}
-            
-            {error && (
-              <div className="bg-red-50 border-l-4 border-red-400 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-red-700">{error}</p>
-                  </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <label htmlFor="email" className="block text-sm font-medium text-white">
+                  Email
+                </label>
+                <div className="mt-1 relative">
+                  <span className="absolute left-3 top-3 text-blue-200">
+                    <Mail size={18} />
+                  </span>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="exemple@email.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="pl-10 appearance-none block w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg shadow-sm placeholder-blue-200 text-white focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+                    required
+                  />
                 </div>
-              </div>
-            )}
-          </form>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <label htmlFor="password" className="block text-sm font-medium text-white">
+                  Mot de passe
+                </label>
+                <div className="mt-1 relative">
+                  <span className="absolute left-3 top-3 text-blue-200">
+                    <Lock size={18} />
+                  </span>
+                  <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="pl-10 appearance-none block w-full px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg shadow-sm placeholder-blue-200 text-white focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+                    required
+                  />
+                </div>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out disabled:opacity-70"
+                >
+                  {isLoading ? (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    />
+                  ) : (
+                    "Créer le compte"
+                  )}
+                </button>
+              </motion.div>
+              
+              {success && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="bg-green-500 bg-opacity-20 border border-green-300 border-opacity-30 rounded-lg p-4"
+                >
+                  <div className="flex">
+                    <div className="flex-shrink-0 text-green-300">
+                      <CheckCircle size={20} />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-100">{success}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="bg-red-500 bg-opacity-20 border border-red-300 border-opacity-30 rounded-lg p-4"
+                >
+                  <div className="flex">
+                    <div className="flex-shrink-0 text-red-300">
+                      <AlertCircle size={20} />
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-red-100">{error}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </form>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

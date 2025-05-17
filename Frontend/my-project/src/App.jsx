@@ -25,7 +25,6 @@ import HomeCandidat from './pages/candidat/HomeCandidat';
 import OffresCandidat from './pages/candidat/OffresCandidat';
 import ProfilCandidat from './pages/candidat/ProfilCandidat';
 import OffreDetailCandidat from './pages/candidat/OffreDetailCandidat';
-
 // Auth
 import Login from './pages/auth/Login';
 import RegisterCandidat from './pages/auth/RegisterCandidat';
@@ -60,7 +59,7 @@ function App() {
         </Route>
         {/* Candidat */}
     <Route path="/candidat/*" element={<CandidatLayout />}>
-  <Route path="home" element={<HomeCandidat />} />
+  <Route index element={<HomeCandidat />} />
   <Route path="offres" element={<OffresCandidat />} />
   <Route path="offres/:id" element={<OffreDetailCandidat />} />
   <Route path="profil" element={<ProfilCandidat />} />

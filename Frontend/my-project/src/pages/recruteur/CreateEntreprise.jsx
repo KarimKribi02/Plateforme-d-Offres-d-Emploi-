@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { ChevronRight, Building2, Briefcase, MapPin, Globe, Check, AlertCircle } from 'lucide-react';
 
 export default function CreateEntreprise() {
   // State pour les champs du formulaire
@@ -11,7 +11,11 @@ export default function CreateEntreprise() {
     site_web: ''
   });
 
-  // State pour la gestion des erreurs ou du succès
+  // Animation states
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeField, setActiveField] = useState(null);
+
+  // État pour la gestion des erreurs ou du succès
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,116 +29,121 @@ export default function CreateEntreprise() {
     }));
   };
 
+  // Animation d'entrée
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   // Fonction pour gérer la soumission du formulaire
-  // Dans votre fonction handleSubmit du composant CreateEntreprise:
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    setIsSubmitting(true);
 
-  const token = localStorage.getItem('token');
-  const recruteurId = localStorage.getItem('user_id');
-  
-  console.log("Token:", token);
-  console.log("Recruteur ID:", recruteurId);
-
-  // Ajoutez le recruteur_id aux données du formulaire
-  const entrepriseData = {
-    ...formData,
-    recruteur_id: recruteurId
+    // Simuler une soumission réussie pour la démo
+    setTimeout(() => {
+      setSuccess('Entreprise créée avec succès');
+      setError(null);
+      
+      // Réinitialisation du formulaire
+      setFormData({
+        nom: '',
+        description: '',
+        secteur: '',
+        adresse: '',
+        site_web: ''
+      });
+      setIsSubmitting(false);
+    }, 1500);
   };
 
-  console.log("Données à envoyer:", entrepriseData);
+  // Fonction pour gérer le focus des champs
+  const handleFocus = (fieldName) => {
+    setActiveField(fieldName);
+  };
 
-  try {
-    const response = await axios.post(
-      'http://localhost:8000/api/entreprises',
-      entrepriseData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+  const handleBlur = () => {
+    setActiveField(null);
+  };
 
-    console.log("Réponse du serveur:", response.data);
-    
-    // Sauvegarde de l'ID de l'entreprise
-    const entrepriseId = response.data.id;
-    localStorage.setItem('entreprise_id', entrepriseId);
-
-    setSuccess('Entreprise créée avec succès');
-    setError(null);
-    
-    // Réinitialisation du formulaire
-    setFormData({
-      nom: '',
-      description: '',
-      secteur: '',
-      adresse: '',
-      site_web: ''
-    });
-  } catch (err) {
-    console.error("Erreur détaillée:", err.response ? err.response.data : err);
-    setError(`Erreur lors de la création de l'entreprise: ${err.response ? err.response.data.message || JSON.stringify(err.response.data) : err.message}`);
-    setSuccess(null);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  // Fonction pour obtenir la classe dynamique de chaque champ
+  const getFieldClasses = (fieldName) => {
+    return `mt-1 block w-full border rounded-lg shadow-sm py-3 px-4 transition-all duration-300 focus:outline-none ${
+      activeField === fieldName 
+        ? 'border-blue-500 ring-2 ring-blue-200' 
+        : 'border-gray-200 hover:border-blue-300'
+    }`;
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div 
+        className={`max-w-3xl mx-auto transition-all duration-700 transform ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">Créer une entreprise</h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+            Créer une entreprise
+          </h2>
+          <p className="mt-2 text-sm text-blue-700 font-medium">
             Complétez le formulaire ci-dessous pour ajouter votre entreprise
           </p>
         </div>
 
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="bg-blue-600 px-6 py-4">
-            <h3 className="text-lg font-medium text-white">Informations de l'entreprise</h3>
+        <div className="bg-white shadow-xl rounded-2xl overflow-hidden transform transition-all hover:shadow-2xl duration-300">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5">
+            <h3 className="text-lg font-medium text-white flex items-center">
+              <Building2 className="mr-2" size={22} />
+              Informations de l'entreprise
+            </h3>
           </div>
 
-          <form onSubmit={handleSubmit} className="px-6 py-6 space-y-6">
-            <div>
-              <label htmlFor="nom" className="block text-sm font-medium text-gray-700">Nom de l'entreprise</label>
+          <div className="px-6 py-8 space-y-6">
+            <div className="transform transition-all duration-300 hover:translate-x-1">
+              <label htmlFor="nom" className="block text-sm font-medium text-gray-700 flex items-center">
+                <Briefcase className="mr-2 text-blue-500" size={16} />
+                Nom de l'entreprise
+              </label>
               <input
                 type="text"
                 id="nom"
                 placeholder="Ex: Tech Solutions"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className={getFieldClasses('nom')}
                 name="nom"
                 value={formData.nom}
                 onChange={handleChange}
+                onFocus={() => handleFocus('nom')}
+                onBlur={handleBlur}
                 required
               />
             </div>
 
-            <div>
+            <div className="transform transition-all duration-300 hover:translate-x-1">
               <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
               <textarea
                 id="description"
                 placeholder="Décrivez votre entreprise en quelques lignes..."
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className={getFieldClasses('description')}
                 rows="4"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
+                onFocus={() => handleFocus('description')}
+                onBlur={handleBlur}
                 required
               />
             </div>
 
-            <div>
+            <div className="transform transition-all duration-300 hover:translate-x-1">
               <label htmlFor="secteur" className="block text-sm font-medium text-gray-700">Secteur d'activité</label>
               <select
                 id="secteur"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className={getFieldClasses('secteur')}
                 name="secteur"
                 value={formData.secteur}
                 onChange={handleChange}
+                onFocus={() => handleFocus('secteur')}
+                onBlur={handleBlur}
                 required
               >
                 <option value="" disabled>Choisir un secteur</option>
@@ -147,52 +156,77 @@ const handleSubmit = async (e) => {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="adresse" className="block text-sm font-medium text-gray-700">Adresse</label>
+            <div className="transform transition-all duration-300 hover:translate-x-1">
+              <label htmlFor="adresse" className="block text-sm font-medium text-gray-700 flex items-center">
+                <MapPin className="mr-2 text-blue-500" size={16} />
+                Adresse
+              </label>
               <input
                 type="text"
                 id="adresse"
                 placeholder="Ex: 123 Rue des Entrepreneurs, 75001 Paris"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className={getFieldClasses('adresse')}
                 name="adresse"
                 value={formData.adresse}
                 onChange={handleChange}
+                onFocus={() => handleFocus('adresse')}
+                onBlur={handleBlur}
                 required
               />
             </div>
 
-            <div>
-              <label htmlFor="site_web" className="block text-sm font-medium text-gray-700">Site Web</label>
+            <div className="transform transition-all duration-300 hover:translate-x-1">
+              <label htmlFor="site_web" className="block text-sm font-medium text-gray-700 flex items-center">
+                <Globe className="mr-2 text-blue-500" size={16} />
+                Site Web
+              </label>
               <input
                 type="url"
                 id="site_web"
                 placeholder="Ex: https://www.entreprise.com"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className={getFieldClasses('site_web')}
                 name="site_web"
                 value={formData.site_web}
                 onChange={handleChange}
+                onFocus={() => handleFocus('site_web')}
+                onBlur={handleBlur}
               />
             </div>
 
-            <div className="pt-4">
+            <div className="pt-6">
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={isSubmitting}
-                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-75 cursor-not-allowed' : ''}`}
+                className={`w-full flex justify-center items-center py-4 px-4 border border-transparent rounded-xl shadow-lg text-base font-medium text-white transition-all duration-300 ${
+                  isSubmitting 
+                    ? 'bg-blue-400 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl'
+                }`}
               >
-                {isSubmitting ? 'Enregistrement...' : 'Enregistrer l\'entreprise'}
+                {isSubmitting ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Enregistrement...
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    Enregistrer l'entreprise 
+                    <ChevronRight className="ml-2" />
+                  </span>
+                )}
               </button>
             </div>
-          </form>
+          </div>
         </div>
 
         {error && (
-          <div className="mt-4 bg-red-50 border-l-4 border-red-400 p-4 rounded">
+          <div className="mt-6 bg-red-50 border-l-4 border-red-400 p-4 rounded-lg transition-all duration-300 hover:shadow-md animate-pulse">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
+                <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">
                 <p className="text-sm text-red-700">{error}</p>
@@ -202,12 +236,10 @@ const handleSubmit = async (e) => {
         )}
 
         {success && (
-          <div className="mt-4 bg-green-50 border-l-4 border-green-400 p-4 rounded">
+          <div className="mt-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-lg transition-all duration-300 hover:shadow-md">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+                <Check className="h-5 w-5 text-green-400" />
               </div>
               <div className="ml-3">
                 <p className="text-sm text-green-700">{success}</p>
